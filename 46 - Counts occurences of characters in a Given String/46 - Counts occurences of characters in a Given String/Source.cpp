@@ -1,42 +1,45 @@
 #include <iostream>
 #include <string>
 
-int checkIfAlreadyFound(char* chars, char character, int k);
-
 // NOTE: Doesn't support unicode
+
+typedef struct 
+{
+	char c;
+	int i;
+} CharactersList;
+
+int checkIfAlreadyFound(CharactersList* list, char character, int k);
 
 void main()
 {
 	std::string inputString;
-	char* chars = nullptr;
-	int* count = nullptr;
+	CharactersList* list = nullptr;
 	std::cout << "Write something:" << std::endl;
 	std::getline(std::cin, inputString);
 	int j, k = 0;
 	for (int i = 0; i < inputString.length(); i++)
 	{
-		j = checkIfAlreadyFound(chars, inputString.at(i), k);
+		j = checkIfAlreadyFound(list, inputString.at(i), k);
 		if (j >= 0)
-			count[j]++;
+			list[j].i++;
 		else
 		{
-			chars = (char*)realloc(chars, (k + 1) * sizeof(char));
-			count = (int*)realloc(count, (k + 1) * sizeof(int));
-			chars[k] = inputString.at(i);
-			count[k] = 1;
+			list = (CharactersList*) realloc(list, (k + 1) * sizeof(CharactersList));
+			list[k].c = inputString.at(i);
+			list[k].i = 1;
 			k++;
 		}
 	}
 	for (int i = 0; i < k; i++)
-		std::cout << chars[i] << ":" << count[i] << std::endl;
-	free(chars);
-	free(count);
+		std::cout << list[i].c << ":" << list[i].i << std::endl;
+	free(list);
 }
 
-int checkIfAlreadyFound(char* chars, char character, int k)
+int checkIfAlreadyFound(CharactersList* list, char character, int k)
 {
 	for (int i = 0; i < k; i++)
-		if (chars[i] == character)
+		if (list[i].c == character)
 			return i;
 	return -1;
 }
